@@ -36,4 +36,3 @@ for d in range(len(rows)):
 		print alp;
 
 
-

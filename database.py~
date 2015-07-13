@@ -8,7 +8,7 @@ db = MySQLdb.connect(host="localhost", # your host, usually localhost
 
 # you must create a Cursor object. It will let
 #  you execute all the queries you need
-s="Get started by reading our documentation"
+s="The Treebank tokenizer uses regular expressions to tokenize text as in Penn Treebank"
 words=TreebankWordTokenizer().tokenize(s)
 cur = db.cursor();
 for x in range(len(words)):
