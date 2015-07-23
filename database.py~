@@ -8,20 +8,35 @@ db = MySQLdb.connect(host="localhost", # your host, usually localhost
 
 # you must create a Cursor object. It will let
 #  you execute all the queries you need
-s="The Treebank tokenizer uses regular expressions to tokenize text as in Penn Treebank"
-words=TreebankWordTokenizer().tokenize(s)
+
+
+file=open('/home/ritesh/Desktop/t.txt');
+strdata=file.read();
+
+punctuation = ['(', ')', '?', ':', ';', ',', '.', '!', '/', '"', "'","_","=",">","<","$","#","@","!","^","%","{","}","|","[","]","&","*","-","+","~","`","1","2","3","4","5","6","7","8","9","0"]
+
+
+for i in punctuation:
+	strdata=strdata.replace(i," ");
+	
+
+words=TreebankWordTokenizer().tokenize(strdata)
 cur = db.cursor();
 for x in range(len(words)):
 	
+	
 	setofalpha=set(words[x]);
 	currentword=words[x];
+	if(currentword.isdigit() or len(currentword)==1):
+		
+		continue;	
 	k=list(setofalpha);
 	length=len(k);
 	strq="";
 	strq=k[0];
 	strvalue="'"+currentword+"'"+',true';
 	for i in range(1,length):
-		print k;
+		#print k;
 		strq=strq+","+k[i];
 		strvalue=strvalue+',true'
 	try:
@@ -29,8 +44,9 @@ for x in range(len(words)):
 		err=cur.execute(rit)
 		#print err;
 		db.commit();
-		print "{0} word enterred successfullly".format(currentword);
+		#print "{0} word enterred successfullly".format(currentword);
 	except:
-		print "word already exits"; 
+		pass;
+		#print "word already exits"; 
 	
 

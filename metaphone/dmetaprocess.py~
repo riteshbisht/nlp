@@ -1,23 +1,41 @@
 import MySQLdb;
 import fuzzy;
-inp=raw_input("enter the text");
+import Levenshtein as leves;
 
-db = MySQLdb.connect(host="localhost", # your host, usually localhost
-                     user="root", # your username
-                      passwd="ritesh", # your password
-                      db="nlp") # name of the data base
+def dmeta(inp):
+	db = MySQLdb.connect(host="localhost", # your host, usually localhost
+                    	 user="root", # your username
+                     	 passwd="ritesh", # your password
+                      	db="nlp") # name of the data base
 
-dmeta=fuzzy.DMetaphone();	#initialized dmetaphone instance
-code=dmeta(inp);			#produce [code,None]
-code=code[0];			#fetch code from [code,None]
+	soundex=fuzzy.Soundex(6);	#initialized dmetaphone instance
+	code=soundex(inp);			#produce [code,None]
 
-querystr="select word from dmetaphone where code='{0}' ".format(code)	#select word from dmetaphone where code='code';
-cur=db.cursor();
+	print code;
+	querystr="select word from dmetaphone where code='{0}' ".format(code)	#select word from dmetaphone where code='code';
+	cur=db.cursor();
 
-p=cur.execute(querystr);
+	p=cur.execute(querystr);
 
-rows=cur.fetchall();	
-row=rows[0].
-print row[0];
+	rows=cur.fetchall();
+	options=[];
+	for i in range(len(rows)):
+		k=rows[i];
+		options.append(k[0]);	
 
+	dis=[];
+	for i in range(len(options)):
+		s=leves.distance(inp,options[i]);
+		#print inp+"-"+options[i]+"="+"{0}".format(s);
+		dis.append(s);
+	#print dis;
+	#print options;
+	minindex=dis.index(min(dis));
+
+	#print options[minindex];
+	s="";	
+	for l in range(len(options)):
+		s=s+options[l]+", ";	
+	
+	return options[minindex];
 
